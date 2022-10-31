@@ -1,0 +1,328 @@
+﻿@model IEnumerable<Loadproject.Models.Brand>
+@{
+    ViewBag.Title = "Brand";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<header class="page-header" style="margin-top: -9px;margin-left: -11px;">
+    <h2> Brand Settings </h2>
+    <div class="right-wrapper pull-right" >
+        <ol class="breadcrumbs">
+            <li>
+                <a href="@Url.Action("Dashboard","Login")">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li><span> Brand Details</span></li>
+        </ol>
+        <a class="sidebar-right-toggle"></a>
+    </div>
+</header>
+
+<div class="row" id="divnew" style="display:none">
+    <div class="col-md-12">
+        <form id="form" action="@Url.Action("Insert_brand","Settings")" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title"> New Brand</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="hidden" name="QueryType" value="Insert" />
+                        <label class="col-sm-2"> Brand <span class="required">*</span></label>
+                        <div class="col-sm-3">
+                            <input type="text" name="Brand_name" class="form-control" />
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="col-sm-12 col-sm-offset-3" style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btn_submit">Submit</button>
+                                <button type="reset" id="cancel1" class="btn btn-danger cancel">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                                <button type="submit" class="btn btn-primary" id="btn_submit">Submit</button>
+                                <button type="reset" id="cancel1" class="btn btn-danger cancel">Cancel</button>
+                            </div>
+                        </div>
+                    </footer>*@
+            </section>
+        </form>
+    </div>
+</div>
+
+<div class="row" id="divdetails">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <button class="btn btn-primary" id="add"><i class="fa fa-plus" aria-hidden="true"> Add New</i></button>
+                </div>
+                <h2 class="panel-title">List of Brands</h2>
+            </header>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        <table class="table table-bordered table-striped mb-none" id="datatable-default" data-swf-path="assets/vendor/jquery-datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf">
+                            <thead>
+                                <tr>
+                                    <th class="centercls"> S.No </th>
+                                    <th style="display:none;"></th>
+                                    <th class="centercls">Brand Name</th>
+                                    <th class="centercls">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int RowNo = 0;}
+                                @foreach (var item in Model)
+                                {
+
+                                    <tr class="gradeX">
+                                        <td class="centercls">
+                                            @{RowNo++;}@RowNo
+                                        </td>
+                                        <td class="ID" style="display:none;">
+                                            <span>@Html.Encode(item.Id)</span>
+                                        </td>
+                                        <td>
+                                            <span>@Html.Encode(item.Brand_name)</span>
+                                        </td>
+                                        <td class="centercls">
+                                            <button class="btn btn-primary" onclick="edit_brand(@Html.Encode(item.Id))" id="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                            <button class="btn btn-danger" id="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        }
+    </div>
+</div>
+
+<div class="row" id="divedit" style="display:none;">
+    <div class="col-md-12">
+        <form id="form" action="@Url.Action("Insert_brand","Settings")" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title">Edit Brand</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="hidden" name="Id" id="eID" />
+                        <input type="hidden" name="QueryType" value="Update" />
+                        <label class="col-sm-2 control-label"> Brand Name </label>
+                        <div class="col-sm-3">
+                            <input id="eBrand" name="Brand_name" class="form-control" />
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="col-sm-12 col-sm-offset-3" style="text-align:center;">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                @*<footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                            </div>
+                        </div>
+                    </footer>*@
+            </section>
+        </form>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+<script src="~/assets/datepicker_normal/jquery-1.7.2.min.js"></script>
+<script src="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript">
+    var dateToday = new Date();
+    var yrRange = (dateToday.getFullYear() - 50) + ":" + (dateToday.getFullYear());
+    $(".datepic").datepicker({
+        numberOfMonths: 1,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: yrRange,
+    });
+</script>
+@if (@ViewBag.Message != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        swal({
+            icon: "error",
+            title: "@ViewBag.Message",
+            showConfirmButton: false,
+            timer: 4500
+        })
+    });
+    </script>
+}
+
+<script type="text/javascript">
+    $(function () {
+        var vars = [], hash;
+        var q = document.URL.split('?')[1];
+        if (q != undefined) {
+            q = q.split('&');
+            for (var i = 0; i < q.length; i++) {
+                hash = q[i].split('=');
+                vars.push(hash[1]);
+                vars[hash[0]] = hash[1];
+            }
+        }
+        var parameter = vars['ac'];
+        if (parameter == "1") {
+            swal({
+                icon: "success",
+                title: "Details Added Successfully...!",
+                showConfirmButton: false,
+                timer: 4500
+            })
+        }
+        else if (parameter == "2") {
+            swal({
+                icon: "success",
+                title: "Details Updated Successfully...!",
+                showConfirmButton: false,
+                timer: 4500
+            })
+        }
+        else if (parameter == "-1") {
+            swal({
+                icon: "error",
+                title: "Brand Already Added...!",
+                showConfirmButton: false,
+                timer: 4500
+            })
+        }
+    });
+</script>
+
+<script>
+    $("body").on("click", "#delete", function () {
+        if (confirm("Do you want to Delete this Brand?")) {
+            var url1 = '@Url.Action("Brand", "Settings")';
+            var url = '@Url.Action("Delete_brand", "Settings")';
+            var row = $(this).closest("tr");
+            var UniqueId = row.find(".ID span").html();
+
+            var myData = {
+                "ID": UniqueId
+            };
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: myData,
+                dataType: "json",
+                success: function (response) {
+                    if (response == "1")
+                    {
+                        swal({
+                            icon: "success",
+                            title: "Details Deleted Successfully...!",
+                            showConfirmButton: true,
+                            confirmButtonText: "Cerrar",
+                            closeOnConfirm: false
+                        }).then(function (result) {
+                            window.location = url1;
+                        })
+                    }
+                    else
+                    {
+                        swal({
+                            icon: "error",
+                            title: "Cannot Delete",
+                            showConfirmButton: false,
+                            timer: 4500
+                        }).then(function (result) {
+                            window.location = url1;
+                        })
+                    }
+                }
+            });
+        }
+    });
+
+    $("#add").click(function () {
+        $("#divnew").show();
+        $("#divedit").hide();
+        $("#divdetails").hide();
+    });
+
+    $(".cancel").click(function () {
+        $("#divnew").hide();
+        $("#divedit").hide();
+        $("#divdetails").show();
+    });
+
+
+    function edit_brand(Ref_id)
+    {
+        var url2 = '@Url.Action("Edit_brand", "Settings")';
+        $("#divedit").show();
+        $("#divnew").hide();
+        $("#divdetails").hide();
+
+         var myData = {
+             "id": Ref_id
+        };
+
+        $.ajax({
+            type: "GET",
+            url: url2,
+            data: myData,
+            dataType: "json",
+            success: function (response) {
+                $('#eID').val(response[0].Id);
+                $('#eBrand').val(response[0].Brand_name);
+            },
+            error: function (response) {
+
+            }
+        });
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.updated_time').text("N/A");
+        $('.shift').text("N/A");
+
+        if ($.fn.DataTable.isDataTable('#datatable-default')) {
+            $('#datatable-default').DataTable().destroy();
+        }
+
+        $('#datatable-default').DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            scrollY: true,
+            scrollX: true,
+            scroller: true
+        });
+
+    });
+</script>
+

@@ -1,0 +1,714 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.css" integrity="sha512-NtU/Act0MEcVPyqC153eyoq9L+UHkd0s22FjIaKByyA6KtZPrkm/O5c5xzaia4pyCfReCS634HyQ7tJwKNxC/g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    .dataTables_filter {
+        float: right;
+        width: 50%;
+    }
+
+    .dt-buttons {
+        margin-top: 15px;
+        border-radius: 5px;
+    }
+    .buttons-excel {
+        background-color: blueviolet !important;
+        color: white !important;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.css">
+<header class="page-header" style="margin-top: -9px;margin-left: 0; margin-bottom: 0px;">
+    <h2> Home </h2>
+    <div class="right-wrapper pull-right" style="padding-right:200px;">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="@Url.Action("Dashboard","Login")">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li><span>Dashboard</span></li>
+        </ol>
+        <a class="sidebar-right-toggle"></a>
+    </div>
+</header>
+<br />
+
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        <section class="panel" id="heading">
+
+            <header class="panel-heading" style="background-color:teal;color:white;">
+                <h2 class="panel-title" style="color:white;line-height:10px !important;">Filter</h2>
+            </header>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        <div class="form-group" id="date_internal">
+
+
+                            <div class="col-sm-3 col-md-4">
+                                <label> Department <span class="required">*</span></label>
+                                <select class="form-control select2" id="Department" name="Department">
+                                    <option value="All">All</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2 col-md-2">
+                                <label> Financial Year  <span class="required">*</span></label>
+                                <input type="text" id="fyear" class="form-control date-own" />
+                            </div>
+
+                            <div class="col-sm-2 col-md-2">
+                                <label>  Month  <span class="required">*</span></label>
+                                <input type="text" id="Month" class="form-control month-own" />
+                            </div>
+
+                            <div class="col-sm-2 col-md-3">
+                                <label> Filter</label><br />
+                                <button type="submit" id="btn_apply" class="btn btn-primary" onclick="get_data()">Search</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="apply_cancel" class="btn btn-danger" onclick="reset_data()">Reset</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<div class="div_dashboard" style="display:none;">
+    <div class="row">
+        <div class="col-md-9">
+
+            <section class="panel" style="background-color:#fff;">
+                <header class="panel-heading forms" style="background-color:teal;color:white;">
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-down"></a>
+                    </div>
+                    <h2 class="panel-title" style="color:white">Dashboard</h2>
+                </header>
+
+
+                <div class="row">
+                    <div class="col-md-4 col-sm-3">
+                        <section class="panel panel-featured-left panel-featured-primary">
+                            <div class="panel-body" style="height:90px;">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col widget-summary-col-icon">
+                                        <div class="summary-icon bg-primary" style="height:60px !important;width:60px !important;line-height:60px;">
+                                            <i class="fa fa-users fa-2xl"></i>
+                                        </div>
+                                    </div>
+                                    <div class="widget-summary-col" style="padding-top:20px;">
+                                        <div class="summary">
+                                            <h4 class="title">Active Employee's : <strong class="amount work_count"></strong></h4>
+                                            <div class="info">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-md-4 col-sm-3">
+                        <section class="panel panel-featured-left panel-featured-quartenary">
+                            <div class="panel-body" style="height:90px;">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col widget-summary-col-icon">
+                                        <div class="summary-icon bg-quartenary" style="height:60px !important;width:60px !important;line-height:60px;">
+                                            <i class="fa fa-users"></i>
+                                        </div>
+                                    </div>
+                                    <div class="widget-summary-col" style="padding-top:20px;">
+                                        <div class="summary">
+                                            <h4 class="title">Male Employee's : <strong class="amount male_count"></strong></h4>
+                                            <div class="info">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+
+                    <div class="col-md-4 col-sm-3">
+                        <section class="panel panel-featured-left panel-featured-secondary">
+                            <div class="panel-body" style="height:90px;">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col widget-summary-col-icon">
+                                        <div class="summary-icon bg-secondary" style="height:60px !important;width:60px !important;line-height:60px;">
+                                            <i class="fa fa-users"></i>
+                                        </div>
+                                    </div>
+                                    <div class="widget-summary-col" style="padding-top:20px;">
+                                        <div class="summary">
+                                            <h4 class="title">Female Employee's : <strong class="amount female_count"></strong></h4>
+                                            <div class="info">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <h4 style="padding-left:25px;">FILTER </h4>
+                    <div class="col-md-10 col-lg-10 col-xl-10">
+                        <div class="panel-body">
+                            <div class="form-group">
+
+                                <div class="col-sm-2 col-md-3">                                    
+                                    <select class="form-control select2" id="report_type" name="report_type">
+                                        <option value="0">Select</option>
+                                        <option value="1">Role wise</option>
+                                        <option value="2">Brand & Grade wise</option>
+                                        <option value="3">Designation wise</option>
+                                        @*<option value="4">Experience wise</option>*@
+                                    </select>
+
+                                </div>
+                                <div class="col-sm-3 col-md-3">                                    
+                                    <button type="submit" id="btn_view" class="btn btn-primary" onclick="get_dashboard_data()">Search</button>
+                                </div>
+                              
+                                <div class="col-sm-6">
+                                    <table class="table table-bordered table-striped mb-none" id="datatable-default1">
+                                        
+                                        <thead>
+                                            <tr style="color:#fff;background-color:Highlight;">
+                                                <th>#</th>
+                                                <th class="centercls"> <span id="tbl_title">Title</span> </th>
+                                                <th class="centercls"> Total </th>
+                                                <th class="centercls"> Male </th>
+                                                <th class="centercls"> FeMale </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="count_details"></tbody>
+                                    </table>
+
+                                    @*</div>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-9">
+        <section class="panel">
+            <header class="panel-heading forms" style="background-color:teal;color:white;">
+                <div class="panel-actions" style="top:6px !important;">
+                    <button class="btn btn-primary" id="add"><i class="fa fa-plus" aria-hidden="true">Add New</i></button>
+                </div>
+                <h2 class="panel-title" style="color:white;line-height:10px !important;">List of Employee</h2>
+            </header>
+            <div class="panel-body">
+                @*<div class="dt-responsive table-responsive">*@
+                    <div class="form-group">
+                        <table class="table table-bordered table-striped mb-none" id="datatable-default">
+                            <thead>
+                                <tr style="color:#fff;background-color:Highlight;">
+                                    <th class="centercls"> S.No </th>
+                                    <th class="centercls">EmpCode </th>
+                                    <th class="centercls">Name </th>
+                                    <th>Gender</th>
+                                    <th class="centercls">Date Of Birth</th>
+                                    <th class="centercls">Date Of Join</th>
+                                    <th class="centercls">Pre Exp</th>
+                                    <th class="centercls">Titan Exp</th>
+                                    <th class="centercls">Total Exp</th>
+                                    <th class="centercls">Experience Category</th>
+                                    <th class="centercls">Report Manager</th>
+                                    <th>Department</th>
+                                    @*<th class="centercls">Designation</th>*@
+                                    <th class="centercls">Role </th>
+                                    <th class="centercls">MobileNo </th>
+                                    <th class="centercls">Qualification </th>
+                                    <th class="centercls">Status </th>
+                                </tr>
+                            </thead>
+                            <tbody class="details"></tbody>
+                        </table>
+                    </div>
+                @*</div>*@
+            </div>
+        </section>
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+<script src="~/assets/datepicker_normal/datepicker_normal_jquery.min.js"></script>
+<script src="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+
+<script>
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       $('.shift').text("N/A");
+
+        if ($.fn.DataTable.isDataTable('#datatable-default')) {
+            $('#datatable-default').DataTable().destroy();
+        }
+
+        $('#datatable-default').DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            scrollY: true,
+            scrollX: true,
+            scroller: true
+        });
+
+    });
+
+
+    $(".datepic").datepicker({
+        format: "yyyy-mm-dd",
+        orientation: "bottom",
+        endDate: '+0d'
+    });
+
+    $('.month-own').datepicker({
+        format: "mm",
+        viewMode: "months",
+        minViewMode: "months",
+        orientation: "bottom"
+    });
+    $('.date-own').datepicker({
+        minViewMode: 2,
+        format: 'yyyy',
+        startView: 2,
+        endDate: '+0y',
+        orientation: "bottom"
+    });
+
+    $("#add").click(function ()
+    {
+        var R_url = '@Url.Action("Index", "Employee")';
+        window.location = R_url;
+    });
+
+
+</script>
+
+<script>
+    $(function () {
+
+        var url4 = '@Url.Action("Getdept", "Employee")';
+        $.ajax({
+            type: "POST",
+            url: url4,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="All">All</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Dept_name + '</option>';
+                }
+                $("#Department").html(s);
+            }
+        });
+
+    });
+
+    //$('#myInputTextField').keyup(function () {
+    //    oTable.search($(this).val()).draw();
+    //})
+
+    function get_data() {
+        var Department = $('#Department').val();
+        var fyear = $('#fyear').val();
+        var Month = $('#Month').val();
+
+        var financial_year = fyear + '-' + Month;
+        var url4 = '@Url.Action("Get_dashboard_Count", "Login")';
+
+
+        $(".div_dashboard").show();
+
+        var myData = {
+            "Department": Department,
+            "financial_year": financial_year
+        };
+
+        $.ajax({
+            type: "GET",
+            url: url4,
+            data: myData,
+            dataType: "json",
+            success: function (data)
+            {
+                $(".work_count").html(data[0].on_count);
+                $(".male_count").html(data[0].male_count);
+                $(".not_work_count").html(data[0].off_count);
+                $(".female_count").html(data[0].female_count);
+            }
+        });
+
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Get_dashboard_deptwise_data", "Login")',
+            data: myData,
+            dataType: "json",
+            success: function (response) {
+                var rowsCnt = document.getElementById("datatable-default").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+                if (rowsCnt > 0) {
+                    for (var i = 0; i < rowsCnt; i++) {
+                        document.getElementById("datatable-default").deleteRow(1);
+                    }
+                }
+
+                if ($.fn.DataTable.isDataTable('#datatable-default')) {
+                    $('#datatable-default').DataTable().clear();
+                }
+
+                if ($.fn.DataTable.isDataTable('#datatable-default')) {
+                    $('#datatable-default').DataTable().destroy();
+                }
+
+
+
+                for (var i = 0; i < response.length; i++) {
+                    var newRow = $("<tr>");
+                    var cols = '';
+                    var n = ($('.details tr').length) + 1;
+                    cols += "<td> <p>" + n + "</p></td>";
+                    cols += "<td class=''>  <span>" + response[i].EmpCode + "</span> </td>";
+                    cols += "<td class=''><span>" + response[i].Name + "</span></td>";
+                    cols += "<td ><span>" + response[i].Gender + "</span></td>";
+                    cols += "<td class=''><span>" + response[i].DateOfBirth + "</span></td>";
+                    cols += "<td class=''><span>" + response[i].DateOfJoin + "</span></td>";
+                    cols += "<td><span>" + response[i].PreExp + "</span></td>";
+                    cols += "<td> <span>" + response[i].TitanExp + "</span></td>";
+                    cols += "<td><span>" + response[i].TotalExp + "</span></td>";
+                    cols += "<td><span>" + response[i].ExpCat + "</span></td>";
+                    cols += "<td><span>" + response[i].Report + "</span></td>"
+                    cols += "<td><span>" + response[i].Department + "</span></td>";
+                   // cols += "<td>" + response[i].Designation + "</td>";
+                    cols += "<td> <span>" + response[i].Role + "</span></td>";
+                    cols += "<td><span>" + response[i].Mobile_no + "</span></td>";
+                    cols += "<td>" + response[i].Qualification + "</td>";
+                    if (response[i].Status == '1') {
+                        cols += "<td><span>Active</span></td>";
+                    }
+                    else {
+                        cols += "<td><span>In-Active</span></td>";
+                    }
+
+
+                    newRow.append(cols);
+                    $(".details").append(newRow);
+                }
+
+
+
+                $('#datatable-default').DataTable({
+                    //"responsive": true,
+                    ////"autoWidth": false,
+                    ////"scrollCollapse": true,
+                    //dom: 'Bfrtip',
+                    //buttons: [
+                    //    'csv', 'excel'
+                    //]
+
+
+                    scrollX: true,
+                    "responsive": true,
+                    "autoWidth": false,
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        ['All'],
+                    ],
+                    dom: 'Bfrtip',
+
+                    buttons: [{
+                        extend: 'excelHtml5',
+                        autoFilter: true,
+                        sheetName: 'Employee_Info',
+                        text: '<h4 style="font-size: 13px;margin-top:2px !important;margin-bottom:2px !important;"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></i> Download</h4>',
+                    }],
+                    "ordering": false,
+                    "bLengthChange": false,
+                });
+
+            },
+            error: function (response) {
+
+
+            }
+        });
+
+
+    }
+
+    function reset_data() {
+        $("#Department").val("All");
+        $("#fyear").val('');
+        $("#Month").val('');
+        $(".div_dashboard").hide();
+    }
+
+
+    function get_dashboard_data() {
+        var report_type = $("#report_type").val();
+
+        if (report_type == '1') {
+            $("#tbl_title").html("Role");
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Get_overall_role", "Login")',
+                data: '{}',
+                dataType: "json",
+                success: function (response) {
+
+                    var rowsCnt = document.getElementById("datatable-default1").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+                    if (rowsCnt > 0) {
+                        for (var i = 0; i < rowsCnt; i++) {
+                            document.getElementById("datatable-default1").deleteRow(1);
+                        }
+                    }
+
+                    if ($.fn.DataTable.isDataTable('#datatable-default1')) {
+                        $('#datatable-default1').DataTable().clear();
+                    }
+
+                    if ($.fn.DataTable.isDataTable('#datatable-default1')) {
+                        $('#datatable-default1').DataTable().destroy();
+                    }
+
+                    for (var i = 0; i < response.length; i++) {
+                        var newRow = $("<tr>");
+                        var cols = '';
+                        var n = ($('.count_details tr').length) + 1;
+                        cols += "<td> <p>" + n + "</p></td>";
+                        cols += "<td class=''>  <span>" + response[i].title_name + "</span> </td>";
+                        cols += "<td class=''><span>" + response[i].total_count + "</span></td>";
+                        cols += "<td ><span>" + response[i].male_count + "</span></td>";
+                        cols += "<td class=''><span>" + response[i].female_count + "</span></td>";
+                        newRow.append(cols);
+                        $(".count_details").append(newRow);
+                    }
+                    $('#datatable-default1').DataTable({
+                        scrollX: true,
+                        "responsive": true,
+                        "autoWidth": false,
+                        //dom: 'Bfrtip',
+                        //buttons: [{
+                        //    extend: 'excel',
+                        //   /* footer: false,*/
+                        //    //autoFilter: true,
+                        //    //sheetName: 'Role_wise',
+                        //}],
+                        "ordering": false,
+                        "searching": false,
+                        "bLengthChange": false,
+                        "bPaginate": false,
+
+                    });
+
+                },
+                error: function (response) {
+
+
+                }
+            });
+        }
+
+
+        if (report_type == '2') {
+            $("#tbl_title").html("Brand & Grade");
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Get_overall_brand", "Login")',
+                data: '{}',
+                dataType: "json",
+                success: function (response) {
+
+                    var rowsCnt = document.getElementById("datatable-default1").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+                    if (rowsCnt > 0) {
+                        for (var i = 0; i < rowsCnt; i++) {
+                            document.getElementById("datatable-default1").deleteRow(1);
+                        }
+                    }
+
+                    if ($.fn.DataTable.isDataTable('#datatable-default1')) {
+                        $('#datatable-default1').DataTable().clear();
+                    }
+
+                    if ($.fn.DataTable.isDataTable('#datatable-default1')) {
+                        $('#datatable-default1').DataTable().destroy();
+                    }
+
+                    for (var i = 0; i < response.length; i++) {
+                        var newRow = $("<tr>");
+                        var cols = '';
+                        var n = ($('.count_details tr').length) + 1;
+                        cols += "<td> <p>" + n + "</p></td>";
+                        cols += "<td class=''>  <span>" + response[i].title_name + "</span> </td>";
+                        cols += "<td class=''><span>" + response[i].total_count + "</span></td>";
+                        cols += "<td ><span>" + response[i].male_count + "</span></td>";
+                        cols += "<td class=''><span>" + response[i].female_count + "</span></td>";
+                        newRow.append(cols);
+                        $(".count_details").append(newRow);
+                    }
+                    $('#datatable-default1').DataTable({
+                        scrollX: true,
+                        "responsive": true,
+                        "autoWidth": false,
+                        //dom: 'Bfrtip',
+                        //buttons: [{
+                        //    extend: 'excelHtml5',
+                        //    autoFilter: true,
+                        //    sheetName: 'Brand_wise',
+                        //}],
+                        "ordering": false,
+                        "searching": false,
+                        "bLengthChange": false,
+                        "bPaginate": false,
+                    });
+
+                },
+                error: function (response) {
+
+
+                }
+            });
+        }
+
+
+        if (report_type == '3') {
+            $("#tbl_title").html("Designation");
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Get_overall_desig", "Login")',
+                data: '{}',
+                dataType: "json",
+                success: function (response) {
+
+                    var rowsCnt = document.getElementById("datatable-default1").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+                    if (rowsCnt > 0) {
+                        for (var i = 0; i < rowsCnt; i++) {
+                            document.getElementById("datatable-default1").deleteRow(1);
+                        }
+                    }
+
+                    if ($.fn.DataTable.isDataTable('#datatable-default1')) {
+                        $('#datatable-default1').DataTable().clear();
+                    }
+
+                    if ($.fn.DataTable.isDataTable('#datatable-default1')) {
+                        $('#datatable-default1').DataTable().destroy();
+                    }
+
+                    for (var i = 0; i < response.length; i++) {
+                        var newRow = $("<tr>");
+                        var cols = '';
+                        var n = ($('.count_details tr').length) + 1;
+                        cols += "<td> <p>" + n + "</p></td>";
+                        cols += "<td class=''>  <span>" + response[i].title_name + "</span> </td>";
+                        cols += "<td class=''><span>" + response[i].total_count + "</span></td>";
+                        cols += "<td ><span>" + response[i].male_count + "</span></td>";
+                        cols += "<td class=''><span>" + response[i].female_count + "</span></td>";
+                        newRow.append(cols);
+                        $(".count_details").append(newRow);
+                    }
+                    $('#datatable-default1').DataTable({
+                        scrollX: true,
+                        "responsive": true,
+                        "autoWidth": false,
+                        //dom: 'Bfrtip',
+                        //buttons: [{
+                        //    extend: 'excelHtml5',
+                        //    autoFilter: true,
+                        //    sheetName: 'Designation_wise',
+                        //}],
+                        "ordering": false,
+                        "searching": false,
+                        "bLengthChange": false,
+                        "bPaginate": false,
+                    });
+
+                },
+                error: function (response) {
+
+
+                }
+            });
+        }
+    }
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.updated_time').text("N/A");
+        $('.shift').text("N/A");
+
+        if ($.fn.DataTable.isDataTable('#datatable-default')) {
+            $('#datatable-default').DataTable().destroy();
+        }
+
+        $('#datatable-default').DataTable({
+
+            //"responsive": true,
+            ////"autoWidth": true,
+            ////"scrollCollapse": true,
+            //dom: 'Bfrtip',
+            //buttons: [
+            //    'csv', 'excel'
+            //]
+
+            scrollX: true,
+            "responsive": true,
+            "autoWidth": false,
+            lengthMenu: [
+                [10, 25, 100, -1],
+                ['All'],
+            ],
+            dom: 'Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                autoFilter: true,
+                sheetName: 'Employee_Info',
+                text: '<h4 style="font-size: 13px;margin-top:2px !important;margin-bottom:2px !important;"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></i> Download</h4>',
+
+            }],
+            "ordering": false,
+            "bLengthChange": false,
+            "bPaginate": false,
+
+
+        });
+
+    });
+</script>

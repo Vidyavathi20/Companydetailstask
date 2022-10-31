@@ -1,0 +1,165 @@
+﻿
+@{
+    /**/
+
+    ViewBag.Title = "Organ_structure";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .google-visualization-orgchart-node {
+        min-width: 250px;
+        height: 80px !important;
+        line-height: 10px !important;
+    }
+</style>
+
+<header class="page-header" style="margin-top: -9px;margin-left: 0; margin-bottom: 0px;">
+    <h2> Organization Structure </h2>
+    <div class="right-wrapper pull-right" style="padding-right:200px;">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="@Url.Action("Dashboard","Login")">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li><span>Dashboard</span></li>
+        </ol>
+        <a class="sidebar-right-toggle"></a>
+    </div>
+</header>
+<br />
+
+
+<div class="row">
+    <div class="col-md-9">
+        <section class="panel" id="heading">
+
+            <header class="panel-heading" style="background-color:teal;color:white;">
+                <h2 class="panel-title" style="color:white;line-height:10px !important;">Filter</h2>
+            </header>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        <div class="form-group" id="date_internal">
+                           
+                            <div class="col-sm-5 col-md-4">
+                                <label> Department <span class="required">*</span></label>
+                                <select class="form-control select2" id="Department" name="Department">
+                                    <option value="0">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2 col-md-3">
+                                <label> Filter</label><br />
+                                <button type="submit" id="btn_apply" class="btn btn-primary" onclick="get_data()">Search</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="apply_cancel" class="btn btn-danger" onclick="reset_data()">Reset</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="container" style="overflow-x:scroll;">
+    <div id="empChart">
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+<script>
+     $(function () {
+
+        var url4 = '@Url.Action("Getdept", "Employee")';
+        $.ajax({
+            type: "POST",
+            url: url4,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="0">Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Dept_name + '</option>';
+                }
+                $("#Department").html(s);
+            }
+        });
+
+     });
+
+
+     
+
+    function drawEmpChart()
+    {
+
+        var url4 = '@Url.Action("get_org_structure", "Employee")';
+        var Department = $("#Department").val();
+
+        var myData = {
+            "Dept_name": Department,
+        };
+
+        $.ajax({
+            type: "POST",
+            url: url4,
+            data: myData,
+            dataType: "json",
+            success: function (empData) {
+
+                var chartData = new google.visualization.DataTable();
+
+                chartData.addColumn('string', 'Name');
+                chartData.addColumn('string', 'Manager');
+                chartData.addColumn('string', 'ToolTip');
+
+                $.each(empData, function (index, row)
+                {
+                    var reportID = row.ReportID.toString() == "0" ? '' : row.ReportID.toString();
+
+                    chartData.addRows([[{
+                        v: row.Id.toString(),
+                        f: '<div style="font-size:10px;"> <div style="width:70%;float:right;text-align: left;"> <span>' + row.EmpCode + ' / ' + row.FirstName + ' </span><br/> <span>' + row.Designation + '</span><br/> <span>' + row.Mobile_no + '</span> <br/><span>' + row.Email + '</span> </div> <div style="width:30%;float:left;"> <img style="border-radius:50%"; height="50px" width="50px" src = "../../Images/' + row.Photo.toString() + '" /> </div> </div> '
+                    }, reportID, row.Designation]]);
+                });
+
+                var chart = new google.visualization.OrgChart($("#empChart")[0]);
+                chart.draw(chartData, { allowHtml: true });
+            },
+            failure: function (xhr, status, error) {
+                alert("Failure: " + xhr.responseText);
+            },
+            error: function (xhr, status, error) {
+                alert("Error: " + xhr.responseText);
+            }
+        });
+    }
+
+    function get_data()
+    {
+        google.load("visualization", "1", { packages: ["orgchart"], 'callback': drawEmpChart });
+    }
+
+    function reset_data()
+    {
+        $("#Department").val("0");
+    }
+    
+</script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+<script type="text/javascript">
+
+   
+</script>
+

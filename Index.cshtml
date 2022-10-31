@@ -1,0 +1,1035 @@
+﻿
+@model IEnumerable<Loadproject.Models.Employee>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.css">
+
+<header class="page-header" style="margin-top:-9px;margin-left: -1px; margin-bottom: 0px;">
+    <h2> Employee Settings </h2>
+    <div class="right-wrapper pull-right" style="padding-right:200px;">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="@Url.Action("Dashboard","Login")">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li><span>Employee Details</span></li>
+        </ol>
+        <a class="sidebar-right-toggle"></a>
+    </div>
+</header>
+
+
+
+
+
+<div class="row" id="divnew">
+    <div class="col-md-12">
+        <form id="form" action="@Url.Action("Insert_employee","Employee")" enctype="multipart/form-data" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title"> New Employee</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div>
+                            <input type="hidden" name="QueryType" value="Insert" />
+                            <div class="col-sm-2">
+                                <label> Employee code <span class="required">*</span></label>
+                                <input type="text" name="Empcode" id="Empcode" class="form-control space" placeholder="Empcode" required />
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label> Name <span class="required">*</span></label>
+                                <input type="text" name="Name" id="name" class="form-control space" placeholder="Name" required />
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label> Band Grade <span class="required">*</span></label>
+                                <select class="form-control select2" onchange="Getdesignation(),Getrole()" id="BandGrade" name="BandGrade">
+                                    <option value="0">Please Select</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <label> DOB <span class="required">*</span></label>
+                                <input type="text" name="DateOfBirth" id="Dob" class="form-control datepic" placeholder="YYYY:MM:DD" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-2">
+                                <label> Date of Join <span class="required">*</span></label>
+                                <input type="text" name="DateOfJoin" id="DateOfJoin" placeholder="YYYY:MM:DD" class="form-control datepic" autocomplete="off" onchange="get_experience()" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+
+                        <div class="col-sm-2">
+                            <label> Previous Experience <span class="required">*</span></label>
+                            <input type="text" name="PreExp" id="PreExp" class="form-control space" onkeyup="get_final_exp();" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label> Titan Experience <span class="required">*</span></label>
+                            <input type="text" name="TitanExp" id="TitanExp" value="" class="form-control space" />
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label> Total Experience <span class="required">*</span></label>
+                            <input type="text" name="TotalExp" id="TotalExp" value="" class="form-control space" />
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label> Experience category <span class="required">*</span></label>
+                            <input type="text" name="Expcat" id="Expcat" value="" class="form-control space" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label> Report Manager <span class="required">*</span></label>
+                            <input type="text" name="Report" id="Report" value="" class="form-control space" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-sm-2">
+                            <label> Department <span class="required">*</span></label>
+                            <select class="form-control select2 Dept" id="Department" name="Department">
+                                <option value="0">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label> Designation <span class="required">*</span></label>
+                            <select class="form-control" id="Designation" name="Designation">
+                                <option value="0">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label> Gender <span class="required">*</span></label>
+                            <select class="form-control" name="Gender">
+                                <option value="0">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label> Role <span class="required">*</span></label>
+                            <select class="form-control" id="Role" name="Role">
+                                <option value="0">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>Ph.No<span class="required">*</span></label>
+                            <input type="text" class="form-control" name="Mobile_No" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-sm-2">
+                            <label> Status <span class="required">*</span></label>
+                            <select class="form-control" id="basicSelect" name="Status">
+                                <option value="0">Select</option>
+                                <option value="1">Active</option>
+                                <option value="2">In-Active</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label> Email ID <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="Email_id" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label> Qualification <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="Qualification" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary" id="btn_submit">Submit</button>
+                            <button type="reset" id="cancel1" class="btn btn-danger cancel">Cancel</button>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </form>
+    </div>
+</div>
+
+<div class="row" id="divdetails" style="display:none">
+    <div class="col-md-11" style="width:80% !important;">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <button class="btn btn-primary" style="margin-top:-17px!important" id="add"><i class="fa fa-plus" aria-hidden="true"> Add New</i></button>
+                </div>
+                <h2 class="panel-title" style="margin-top:-7px">List of Employee</h2>
+                <div style="margin-left:250px;margin-top:-25px">
+                    <label class="col-sm-3 control-label"> Department <span class="required">*</span></label>
+                    <div class="col-sm-3">
+                        <select class="form-control Dept1" onchange="Getdepartment()" id="Department" name="Department">
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped mb-none" id="datatable-default">
+                                <thead>
+                                    <tr>
+                                        <th class="centercls"> S.No </th>
+                                        <th style="display:none;"></th>
+                                        <th class="centercls">EmpCode </th>
+                                        <th class="centercls">Name </th>
+                                        <th>Gender</th>
+                                        <th class="centercls">Date Of Birth</th>
+                                        <th class="centercls">Date Of Join</th>
+                                        <th class="centercls">Pre Exp</th>
+                                        <th class="centercls">Titan Exp</th>
+                                        <th class="centercls">Total Exp</th>
+                                        <th class="centercls">Experience Cat</th>
+                                        <th class="centercls">Report Manager</th>
+                                        <th>Department</th>
+                                        <th class="centercls">Designation</th>
+                                        <th class="centercls">Role </th>
+                                        <th class="centercls">MobileNo </th>
+                                        <th class="centercls">Qualification </th>
+                                        <th class="centercls">Status </th>
+                                        <th style="min-width: 150px; text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="details">
+                                    @{int RowNo = 0;}
+                                    @foreach (var item in Model)
+                                    {
+
+                                        <tr class="gradeX">
+                                            <td class="centercls">
+                                                @{RowNo++;}@RowNo
+                                            </td>
+                                            <td class="ID" style="display:none;">
+                                                <span>@Html.Encode(item.Id)</span>
+                                            </td>
+                                            <td class="">
+                                                <span>@Html.Encode(item.EmpCode)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Name)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Gender)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.DateOfBirth)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.DateOfJoin)</span>
+                                            </td>
+                                            <td class="">
+                                                <span>@Html.Encode(item.PreExp)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.TitanExp)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.TotalExp)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.ExpCat)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Report)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Department)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Designation)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Role)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Mobile_no)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                <span>@Html.Encode(item.Qualification)</span>
+                                            </td>
+                                            <td class="centercls">
+                                                @if (Html.Encode(item.Status) == "1")
+                                                {
+                                                    <span>Working</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Releived</span>
+                                                }
+                                            </td>
+
+                                            <td style="min-width: 150px; text-align: center">
+                                                <button class="btn btn-primary" onclick="edit_employee(@Html.Encode(item.Id))" id="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                                <button class="btn btn-danger" id="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="row" id="divedit" style="display:none;">
+    <div class="col-md-12">
+        <form id="form" action="@Url.Action("Insert_employee","Employee")" enctype="multipart/form-data" method="post">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                    </div>
+                    <h2 class="panel-title">Edit Employee</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="hidden" name="ID" id="eID" />
+                        <input type="hidden" name="QueryType" value="Update" />
+                        <input type="hidden" name="Role_id" id="eRole_id" />
+                        <input type="hidden" name="Employeename" id="eEmployeename" />
+                        <div class="form-group" style="display:flex">
+                            <label class="col-sm-2 control-label"> Role </label>
+                            <select class="form-control" style="width:31%;margin-left:10px" name="Userrole" id="eRole" onchange="edisplayemail()" required>
+                                <option value="0">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="email_dive" style="display:none">
+                        <div>
+                            <label class="col-sm-2 control-label"> Emailid </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="Emailid" id="eEmailid" class="form-control space" placeholder="" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="reset" id="cancel" class="btn btn-danger cancel">Cancel</button>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </form>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+<script src="~/assets/datepicker_normal/datepicker_normal_jquery.min.js"></script>
+<script src="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript">
+    $(".datepic").datepicker({
+        format: "yyyy-mm-dd",
+        orientation: "bottom",
+        endDate: '+0d'
+    });
+</script>
+
+<script type="text/javascript">
+    function get_experience() {
+        var userinput = document.getElementById("DateOfJoin").value;
+        var dob = new Date(userinput);
+
+        if (userinput == null || userinput == '') {
+            return false;
+        }
+        else {
+            var mdate = userinput.toString();
+            var dobYear = parseInt(mdate.substring(0, 4), 10);
+            var dobMonth = parseInt(mdate.substring(5, 7), 10);
+            var dobDate = parseInt(mdate.substring(8, 10), 10);
+
+            //get the current date from system
+            var today = new Date();
+            //date string after broking
+            var birthday = new Date(dobYear, dobMonth - 1, dobDate);
+
+            //calculate the difference of dates
+            var diffInMillisecond = today.valueOf() - birthday.valueOf();
+
+            //convert the difference in milliseconds and store in day and year variable
+            var year_age = Math.floor(diffInMillisecond / 31536000000);
+            var day_age = Math.floor((diffInMillisecond % 31536000000) / 86400000);
+
+            var month_age = Math.floor(day_age / 30);
+            day_age = day_age % 30;
+
+            var tMnt = (month_age + (year_age * 12));
+            var tDays = (tMnt * 30) + day_age;
+
+            //DOB is greater than today?s date, generate an error: Invalid date
+            if (dob > today) {
+                alert("Invalid date input - Please try again!");
+            }
+            else {
+                if (year_age != 0 && month_age != 0) {
+                    $("#TitanExp").val(year_age + "." + month_age);
+                }
+
+                if (year_age != 0 && month_age == 0) {
+                    $("#TitanExp").val(year_age);
+                }
+
+                if (year_age == 0 && month_age != 0) {
+                    $("#TitanExp").val("0" + "." + month_age);
+                }
+            }
+        }
+        get_final_exp();
+    }
+
+
+    function getWords(monthCount) {
+        function getPlural(number, word) {
+            return number === 1 && word.one || word.other;
+        }
+
+        var months = { one: 'month', other: 'months' },
+            years = { one: 'year', other: 'years' },
+            m = monthCount % 12,
+            y = Math.floor(monthCount / 12),
+            result = [];
+
+        y && result.push(y + '.');
+        m && result.push(m);
+        return result.join('');
+    }
+
+    function get_final_exp() {
+        var PreExp = $("#PreExp").val();
+        var TitanExp = $("#TitanExp").val();
+
+        var exp1 = PreExp.split(".");
+        var exp2 = TitanExp.split(".");
+
+        //console.log(exp1[0]);
+        //console.log(exp1[1]);
+
+        //console.log(exp2[0]);
+        //console.log(exp2[1]);
+
+        //console.log(exp1.length);
+        //console.log(exp2.length);
+
+        var exp_total = 0;
+        var fexp = 0;
+        var fexp1 = 0;
+
+        if (exp1.length == 2) {
+            exp_total += parseInt(exp1[1]);
+        }
+        if (exp2.length == 2) {
+            exp_total += parseInt(exp2[1]);
+        }
+
+        //console.log(exp_total);
+
+        if (parseFloat(exp_total) == 12) {
+            fexp += 1;
+            //console.log("1");
+        }
+
+        if (parseFloat(exp_total) < 12) {
+            fexp += "0." + exp_total;
+            //console.log("2");
+        }
+
+        if (parseFloat(exp_total) > 12) {
+            fexp += getWords(exp_total);
+            //console.log("3");
+        }
+
+        //console.log(parseInt(exp1[0]));
+        //console.log(parseInt(exp2[0]));
+
+        fexp1 = (parseInt(exp1[0]) + parseInt(exp2[0])) + parseFloat(fexp);
+
+        //var TotalExp = (parseFloat(PreExp) + parseFloat(TitanExp));
+
+        $("#TotalExp").val(fexp1);
+
+        if (parseInt(TotalExp) <= 3)
+        {
+            $("#Expcat").val("3 Years");
+        }
+
+        if (parseInt(TotalExp) >= 3 && parseInt(TotalExp) <= 5) {
+            $("#Expcat").val("3-5 Years");
+        }
+
+        if (parseInt(TotalExp) >= 5 && parseInt(TotalExp) <= 10) {
+            $("#Expcat").val("5-10 Years");
+        }
+
+        if (parseInt(TotalExp) >= 10 && parseInt(TotalExp) <= 15) {
+            $("#Expcat").val("10-15 Years");
+        }
+
+        if (parseInt(TotalExp) >= 15) {
+            $("#Expcat").val(">15 Years");
+        }
+
+
+    }
+
+    function Getdepartment()
+    {
+        var dept = $('.Dept1').val();
+        var url4 = '@Url.Action("Getdeptwise_data", "Employee")';
+        var myData = {
+            "dept": dept
+        };
+
+        $.ajax({
+            type: "GET",
+            url: url4,
+            data: myData,
+            dataType: "json",
+            success: function (response)
+            {
+                var rowsCnt = document.getElementById("datatable-default").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+                if (rowsCnt > 0) {
+                    for (var i = 0; i < rowsCnt; i++) {
+                        document.getElementById("datatable-default").deleteRow(1);
+                    }
+                }
+
+                if ($.fn.DataTable.isDataTable('#datatable-default')) {
+                    $('#datatable-default').DataTable().clear();
+                }
+
+                if ($.fn.DataTable.isDataTable('#datatable-default')) {
+                    $('#datatable-default').DataTable().destroy();
+                }
+
+
+
+                for (var i = 0; i < response.length; i++)
+                {
+                    var newRow = $("<tr>");
+                    var cols = '';
+                    var n = ($('.details tr').length) + 1;
+                    cols += "<td> <p>" + n + "</p></td>";
+                    cols += "<td class='' style='display:none;'>  <span>" + response[i].Id + "</span> </td>";
+                    cols += "<td class=''>  <span>" + response[i].EmpCode + "</span> </td>";
+                    cols += "<td class=''><span>" + response[i].Name + "</span></td>";
+                    cols += "<td ><span>" + response[i].Gender + "</span></td>";
+                    cols += "<td class=''><span>" + response[i].DateOfBirth + "</span></td>";
+                    cols += "<td class=''><span>" + response[i].DateOfJoin + "</span></td>";
+                    cols += "<td><span>" + response[i].PreExp + "</span></td>";
+                    cols += "<td> <span>" + response[i].TitanExp + "</span></td>";
+                    cols += "<td><span>" + response[i].TotalExp + "</span></td>";
+                    cols += "<td><span>" + response[i].ExpCat + "</span></td>";
+                    cols += "<td><span>" + response[i].Report + "</span></td>"
+                    cols += "<td><span>" + response[i].Department + "</span></td>";
+                    cols += "<td>" + response[i].Designation + "</td>";
+                    cols += "<td>" + response[i].Mobile_no + "</td>";
+                    cols += "<td>" + response[i].Qualification + "</td>";
+                    cols += "<td> <span>" + response[i].Role + "</span></td>";
+                    if (response[i].Status == '1') {
+                        cols += "<td><span>Working</span></td>";
+                    }
+                    else {
+                        cols += "<td><span>Releived</span></td>";
+                    }
+
+                    cols += "<td style='min-width: 150px;text-align:center;'><button class='btn btn-primary' onclick='edit_employee(" + response[i].id + ")' id='edit'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button>"
+                                           +" <button class='btn btn-danger' id='delete'><i class='fa fa-trash-o' aria-hidden='true'></i></button></td>";
+                    newRow.append(cols);
+                    $(".details").append(newRow);
+                }
+                $('#datatable-default').DataTable({
+                    "responsive": true,
+                    "autoWidth": false,
+                    "scrollCollapse": true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'csv', 'excel'
+                    ]
+                });
+
+            },
+            error: function (response) {
+
+
+            }
+        });
+
+    }
+
+</script>
+
+
+@if (@ViewBag.Message != null)
+{
+    <script type="text/javascript">
+    $(function () {
+        swal({
+            icon: "error",
+            title: "@ViewBag.Message",
+            showConfirmButton: false,
+            timer: 4500
+        })
+    });
+    </script>
+}
+
+<script type="text/javascript">
+        $(function () {
+            var vars = [], hash;
+            var q = document.URL.split('?')[1];
+            if (q != undefined) {
+                q = q.split('&');
+                for (var i = 0; i < q.length; i++) {
+                    hash = q[i].split('=');
+                    vars.push(hash[1]);
+                    vars[hash[0]] = hash[1];
+                }
+            }
+            var parameter = vars['ac'];
+            if (parameter == "1") {
+                swal({
+                    icon: "success",
+                    title: "Details Added Successfully...!",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            }
+            else if (parameter == "2") {
+                swal({
+                    icon: "success",
+                    title: "Details Updated Successfully...!",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            }
+            else if (parameter == "-1") {
+                swal({
+                    icon: "error",
+                    title: "Log Details or Emailid Already Added...!",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            }
+            else if (parameter == "4") {
+                swal({
+                    icon: "error",
+                    title: "Email ID is Required...!",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            }
+            else if (parameter == "4") {
+                swal({
+                    icon: "error",
+                    title: "Name & Role is Required...!",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            }
+
+        });
+
+
+    function Getrole() {
+        var url1 = '@Url.Action("Getrole","Employee")';
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="">Please Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    var brand = $("#BandGrade").select2('data').text;
+                    var role = data[i].Role_name;
+                    if (role == 'Drafter' && brand == 'T1') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Drafter' && brand == 'T2') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Drafter' && brand == 'T3') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Drafter' && brand == 'T4') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Drafter' && brand == 'T5') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Drafter' && brand == 'T6') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Designer' && brand == 'S1') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Designer' && brand == 'S2') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Designer' && brand == 'S3') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Designer' && brand == 'S4') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Team Lead' && brand == 'R1') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+                    if (role == 'Team Lead' && brand == 'R2') {
+                        s += '<option value="' + data[i].Id + '" selected=selected>' + role + '</option>';
+                    }
+
+                }
+                $("#Role").html(s);
+            }
+        });
+    }
+
+    $(document).on("keydown", ".space", function (evt) {
+        var caretPos = $(this)[0].selectionStart
+        if (evt.keyCode == 32 && caretPos == 0) {
+            return false;
+        }
+    });
+
+    $(function () {
+
+        @*var url1 = '@Url.Action("Getrole","Employee")';
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="">Please Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Role_name + '</option>';
+                }
+                $("#Role").html(s);
+            }
+        });*@
+
+
+        var url2 = '@Url.Action("Getbrand", "Employee")';
+        $.ajax({
+            type: "POST",
+            url: url2,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="">Please Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Brand_name + '</option>';
+                }
+                $("#BandGrade").html(s);
+            }
+        });
+
+
+
+
+        var url4 = '@Url.Action("Getdept", "Employee")';
+        $.ajax({
+            type: "POST",
+            url: url4,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="">Please Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Dept_name + '</option>';
+                }
+
+                $("#Department").html(s);
+            }
+        });
+
+         var url5 = '@Url.Action("Getdept", "Employee")';
+        $.ajax({
+            type: "POST",
+            url: url5,
+            data: '{}',
+            dataType: "json",
+            success: function (data) {
+                var s = '<option value="All">All</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Dept_name + '</option>';
+                }
+
+                $(".Dept1").html(s);
+            }
+        });
+
+
+
+    });
+
+     function Getdesignation() {
+            var url3 = '@Url.Action("Getdesignation", "Employee")';
+            $.ajax({
+                type: "POST",
+                url: url3,
+                data: '{}',
+                dataType: "json",
+                success: function (data) {
+                    var s = '<option value="">Please Select</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        var brand = $("#BandGrade").select2('data').text;
+                        var dname = data[i].Designation_name;
+                        if ((brand == 'T1') && (dname == 'Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        if ((brand == 'T2') && (dname == 'Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        if ((brand == 'T3') && (dname == 'Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        if ((brand == 'T4') && (dname == 'Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        else if ((brand == 'Q1') && (dname == 'Associate Group Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand == 'T5') && (dname == 'Senior Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        else if ((brand == 'S1') && (dname == 'Senior Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand == 'S2') && (dname == 'Lead Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand == 'T6') && (dname == 'Lead Engineer')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        else if ((brand == 'R3') && (dname == 'Associate Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand =='S3') && (dname == 'Associate Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand == 'R2') && (dname =='Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand =='S4') && (dname == 'Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        else if ((brand == 'R1') && (dname == 'Associate Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        else if ((brand == 'R4') && (dname == 'Senior Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+
+                        else if ((brand == 'Q2') && (dname == 'Group Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                        else if ((brand == 'Q3') && (dname == 'General Manager')) {
+                            s += '<option value="' + data[i].Id + '" selected=selected>' + dname + '</option>';
+                        }
+                    }
+                    $("#Designation").html(s);
+                }
+            });
+        }
+
+
+</script>
+
+<script>
+        $("body").on("click", "#delete", function () {
+            if (confirm("Do you want to Delete this Employee?")) {
+                var url1 = '@Url.Action("Delete_emp", "Employee")';
+                var url = '@Url.Action("Index", "Employee")';
+                var row = $(this).closest("tr");
+                var UniqueId = row.find(".ID span").html();
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    data: '{id: ' + UniqueId + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response == "1") {
+                            swal({
+                                icon: "success",
+                                title: "Details Deleted Successfully...!",
+                                showConfirmButton: true,
+                                confirmButtonText: "Cerrar",
+                                closeOnConfirm: false
+                            }).then(function (result) {
+                                window.location = url;
+                            })
+                        }
+                        else if (response = "-1") {
+                            swal({
+                                icon: "error",
+                                title: "Cannot Delete Superadmin",
+                                showConfirmButton: false,
+                                timer: 4500
+                            }).then(function (result) {
+                                window.location = url;
+                            })
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#add").click(function () {
+            $("#divnew").show();
+            $("#divedit").hide();
+            $("#divdetails").hide();
+        });
+
+        $(".cancel").click(function () {
+            //$("#divnew").hide();
+            //$("#divedit").hide();
+            //$("#divdetails").show();
+            //$("#superadmindiv").hide();
+            //$("#email").hide();
+            //$("#email_div").hide();
+            //$("#email_dive").hide();
+
+            var R_url = '@Url.Action("Dashboard", "Login")';
+            window.location = R_url;
+
+        });
+
+
+     function edit_employee(Ref_id) {
+
+            var url2 = '@Url.Action("Edit_emp", "Employee")';
+
+            $("#divedit").show();
+            $("#divnew").hide();
+            $("#divdetails").hide();
+
+         $.ajax({
+             type: "POST",
+             url: url2,
+             data: '{id: ' + Ref_id + '}',
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function (response) {
+                 if (response[0].Superadmin == "Yes") {
+                     $("#divedit").hide();
+                     $("#divdetails").show();
+                        swal({
+                            icon: "error",
+                            title: "Cannot Edit Superadmin",
+                            showConfirmButton: true,
+                            timer: 4500
+                        })
+                    }
+
+                        $('#eID').val(response[0].id);
+                        $('#eEmailid').val(response[0].Emailid);
+                        $('#eRole_id').val(response[0].Role_id);
+                        $('#eEmployeename').val(response[0].Employeename);
+                        $('#ePassword').val(response[0].Password);
+                        if (response[0].Userrole == "Admin") {
+                            $("#email_div").show();
+                        }
+                        else {
+                            $("#email_div").hide();
+                        }
+                        var url2 = '@Url.Action("Getrole","Employee")';
+                        $.ajax({
+                            type: "POST",
+                            url: url2,
+                            data: '{}',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                var s = '<option value="">Please Select</option>';
+                                for (var i = 0; i < data.length; i++) {
+                                    if (response[0].Userrole == data[i].Userrole) {
+
+                                        s += '<option value="' + data[i].id + '" selected=selected>' + data[i].Userrole + ' </option>';
+
+                                    }
+                                    else {
+                                        s += '<option value="' + data[i].id + '">' + data[i].Userrole + ' </option>';
+
+                                    }
+                                }
+                                $("#eRole").html(s);
+                            }
+                        });
+
+                },
+                error: function (response) {
+
+                }
+            });
+     }
+
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.updated_time').text("N/A");
+        $('.shift').text("N/A");
+
+        if ($.fn.DataTable.isDataTable('#datatable-default')) {
+            $('#datatable-default').DataTable().destroy();
+        }
+
+        $('#datatable-default').DataTable({
+
+            "responsive": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel'
+            ]
+
+        });
+
+    });
+</script>

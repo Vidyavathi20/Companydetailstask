@@ -1,0 +1,301 @@
+﻿
+@model IEnumerable<Loadproject.Models.Login>
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+
+}
+<head>
+    <title> :: Employee Info /Reporting :: </title>
+    <link rel="stylesheet" type="text/css" href="~/assets/datepicker_normal/jquery-ui-1.8.19.custom.css">
+    <!-- Web Fonts  -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="~/assets/vendor/magnific-popup/magnific-popup.css" />
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap-datepicker/css/datepicker3.css" />
+
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/assets/vendor/jquery-datatables-bs3/assets/css/datatables.css" />
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="~/assets/stylesheets/theme.css" />
+
+    <!-- Skin CSS -->
+    <link rel="stylesheet" href="~/assets/stylesheets/skins/default.css" />
+
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet" href="~/assets/stylesheets/theme-custom.css">
+
+    <!-- Head Libs -->
+    <script src="~/assets/vendor/modernizr/modernizr.js"></script>
+    <link rel="icon" href="~/assets/images/teal.png" type="image/x-icon">
+
+
+    <script src="~/assets/vendor/jquery/jquery.js"></script>
+    <script src="~/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="~/assets/vendor/nanoscroller/nanoscroller.js"></script>
+    <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/assets/vendor/magnific-popup/magnific-popup.js"></script>
+    <script src="~/assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
+    <!-- Theme Base, Components and Settings -->
+    <script src="~/assets/javascripts/theme.js"></script>
+
+    <!-- Theme Custom -->
+    <script src="~/assets/javascripts/theme.custom.js"></script>
+
+    <!-- Theme Initialization Files -->
+    <script src="~/assets/javascripts/theme.init.js"></script>
+
+    <style type="text/css">
+        #divnew1 {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: black;
+            z-index: 99;
+            opacity: 0.8;
+            filter: alpha(opacity=80);
+            -moz-opacity: 0.8;
+            min-height: 100%;
+            width: 100%;
+        }
+
+        .loading {
+            font-family: Arial;
+            font-size: 10pt;
+            /*border: 5px solid #67CFF5;*/
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: fixed;
+            background-color: #0e0e0e4f;
+            z-index: 999;
+        }
+    </style>
+    <style type="text/css">
+        .company {
+            color: #08838a;
+            font-weight: bold;
+            text-align: center;
+            font-size: 21px;
+            padding-right: 170px;
+        }
+
+        @@media only screen and (min-width: 992px) {
+            .company {
+                padding-top: 20px;
+            }
+        }
+
+        @@media only screen and (max-width: 600px) {
+            .company {
+                padding-top: -18px;
+                padding-right: 0;
+            }
+        }
+
+        @@media only screen and (min-width: 1200px) {
+            .company {
+                padding-top: 20px;
+            }
+        }
+
+        @@media only screen and (max-width: 400px) {
+            .company {
+                margin-top: -15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" style="display:none;" align="center">
+        <img src="~/assets/images/loading.gif" alt="" style="width:200px;padding-top:300px;" />
+    </div>
+    <script type="text/javascript">
+        var modal, loading;
+        function ShowProgress() {
+            modal = document.createElement("DIV");
+            modal.className = "modal";
+            document.body.appendChild(modal);
+            loading = document.getElementsByClassName("loading")[0];
+            loading.style.display = "block";
+            var top = Math.max(window.innerHeight / 2 - loading.offsetHeight / 2, 0);
+            var left = Math.max(window.innerWidth / 2 - loading.offsetWidth / 2, 0);
+            loading.style.top = top + "px";
+            loading.style.left = left + "px";
+        };
+        ShowProgress();
+    </script>
+    <script type="text/javascript">
+        function disableBack() { window.history.forward() }
+        window.onpageshow = function (evt) { if (evt.persisted) disableBack() }
+        window.onload = function () {
+            disableBack();
+            setTimeout(function () {
+
+                document.body.removeChild(modal);
+                loading.style.display = "none";
+            }, 1500);
+        };
+    </script>
+    <header class="header">
+        <div class="logo-container">
+            <a class="logo">
+                <img src="~/assets/images/teallogo.png" style="height:35px;" alt="TEAL" />
+            </a>
+            <p class="company">Employee Info /Reporting</p>
+        </div>
+        <div class="header-right">
+            <div id="userbox" class="userbox">
+                <div class="dropdown-menu">
+                </div>
+            </div>
+        </div>
+    </header>
+    <div style="background-color:#34495e;" id="divnew1">
+        <section class="body-sign">
+            <div class="center-sign">
+                <a href="/" class="logo pull-left">
+                </a>
+                <div class="panel panel-sign">
+                    <div class="panel-title-sign mt-xl text-right">
+                        <h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> Sign In</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form id="form" action="@Url.Action("Check_login","Login")" method="post">
+
+                            <div class="form-group mb-lg">
+                                <label>Username</label>
+                                <div class="input-group input-group-icon">
+                                    <input type="text" name="Admin" id="admin" class="form-control space" placeholder="Name" required />
+                                    <span class="input-group-addon">
+                                        <span class="icon icon-lg">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <span style="color:red;font-weight:bold;" id="err_name"></span>
+                            </div>
+
+                            <div class="form-group mb-lg" id="pwd">
+                                <div class="clearfix">
+                                    <label class="pull-left">Password</label>
+                                </div>
+                                <div class="input-group input-group-icon">
+                                    <input name="Password" type="password" id="Password" title="Enter Password" class="form-control input-lg Password" placeholder="Password" maxlength="15" />
+                                    <span class="input-group-addon">
+                                        <span class="icon icon-lg">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                    </span>
+                                </div>                                
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-7">
+                                    <button type="submit" id="signin" class="btn btn-primary">Sign In</button>
+                                </div>
+                                <div class="col-sm-5 text-right" id="div_forgot">
+                                    <a href="@Url.Action("Forgot","Login")" style="text-decoration:none;" class="pull-right">Forgot Password?</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/assets/javascripts/swal.js"></script>
+<script src="~/assets/javascripts/swal_alert.js"></script>
+<script>
+
+    $("#add").click(function () {
+        $("#divnew").show();
+
+    });
+
+    $(".cancel1").click(function () {
+        $("#divnew").hide();
+    });
+
+    $(".cancel").click(function () {
+        $("#divnew1").hide();
+
+    });   
+
+   
+
+    $("#signin").click(function ()
+    {
+
+        var id = $("#Empname").val();
+
+        if (id == "") {
+            document.getElementById("err_name").innerHTML = "Required";
+            return false;
+        }
+        else {
+            document.getElementById("err_name").innerHTML = "";
+        }
+
+        var role_name = $("#role_name").val();
+
+        if (role_name == "Admin")
+        {
+
+            var Password = $("#Password").val();
+
+            if (Password == "") {
+                document.getElementById("errMsg").innerHTML = "Required";
+                return false;
+            }
+            else {
+                document.getElementById("errMsg").innerHTML = "";
+            }
+        }
+    });
+
+
+
+</script>
+
+@if (@ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            $(function () {
+                swal({
+                    icon: "error",
+                    title: "@ViewBag.Message",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            });
+    </script>
+}
+@if (@ViewBag.LMessage != null)
+{
+    <script type="text/javascript">
+            $(function () {
+                swal({
+                    icon: "success",
+                    title: "@ViewBag.LMessage",
+                    showConfirmButton: false,
+                    timer: 4500
+                })
+            });
+    </script>
+}
+
